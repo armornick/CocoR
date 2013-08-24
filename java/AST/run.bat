@@ -1,0 +1,1 @@
+java -jar Taste.jar Test.tas

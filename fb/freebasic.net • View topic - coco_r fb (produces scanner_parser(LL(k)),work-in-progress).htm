@@ -1,0 +1,793 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-gb" lang="en-gb"><head>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="content-style-type" content="text/css">
+<meta http-equiv="content-language" content="en-gb">
+<meta http-equiv="imagetoolbar" content="no">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<title>freebasic.net • View topic - coco/r fb (produces scanner/parser(LL(k)),work-in-progress)</title>
+
+
+
+<!--
+	phpBB style name: prosilver
+	Based on style:   prosilver (this is the default phpBB3 style)
+	Original author:  Tom Beddard ( http://www.subBlue.com/ )
+	Modified by:
+-->
+
+<script type="text/javascript">
+// <![CDATA[
+	var jump_page = 'Enter the page number you wish to go to:';
+	var on_page = '1';
+	var per_page = '';
+	var base_url = '';
+	var style_cookie = 'phpBBstyle';
+	var style_cookie_settings = '; path=/; domain=freebasic.net';
+	var onload_functions = new Array();
+	var onunload_functions = new Array();
+
+	
+
+	/**
+	* Find a member
+	*/
+	function find_username(url)
+	{
+		popup(url, 760, 570, '_usersearch');
+		return false;
+	}
+
+	/**
+	* New function for handling multiple calls to window.onload and window.unload by pentapenguin
+	*/
+	window.onload = function()
+	{
+		for (var i = 0; i < onload_functions.length; i++)
+		{
+			eval(onload_functions[i]);
+		}
+	};
+
+	window.onunload = function()
+	{
+		for (var i = 0; i < onunload_functions.length; i++)
+		{
+			eval(onunload_functions[i]);
+		}
+	};
+
+// ]]>
+</script>
+<script type="text/javascript" src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/styleswitcher.js"></script>
+<script type="text/javascript" src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/forum_fn.js"></script>
+
+<link href="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/print.css" rel="stylesheet" type="text/css" media="print" title="printonly">
+<link href="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/style.css" rel="stylesheet" type="text/css" media="screen, projection">
+
+<link href="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/normal.css" rel="stylesheet" type="text/css" title="A">
+<link href="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/medium.css" rel="alternate stylesheet" type="text/css" title="A+">
+<link href="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/large.css" rel="alternate stylesheet" type="text/css" title="A++">
+
+
+
+</head>
+
+<body id="phpbb" class="section-viewtopic ltr">
+
+<div id="wrap">
+	<a id="top" name="top" accesskey="t"></a>
+	<div id="page-header">
+		<div class="headerbar">
+			<div class="inner"><span class="corners-top"><span></span></span>
+
+			<div id="site-description">
+				<a href="http://www.freebasic.net/forum/index.php" title="Board index" id="logo"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/site_logo.gif" alt="" title="" height="48" width="96"></a>
+				<h1>freebasic.net</h1>
+				<p>FreeBASIC's Official Forums</p>
+				<p class="skiplink"><a href="#start_here">Skip to content</a></p>
+			</div>
+
+		
+			<div id="search-box">
+				<form action="./search.php" method="get" id="search">
+				<fieldset>
+					<input name="keywords" id="keywords" maxlength="128" title="Search for keywords" class="inputbox search" value="Search…" onclick="if(this.value=='Search…')this.value='';" onblur="if(this.value=='')this.value='Search…';" type="text">
+					<input class="button2" value="Search" type="submit"><br>
+					<a href="http://www.freebasic.net/forum/search.php" title="View the advanced search options">Advanced search</a> 
+				</fieldset>
+				</form>
+			</div>
+		
+
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+
+		<div class="navbar">
+			<div class="inner"><span class="corners-top"><span></span></span>
+
+			<ul class="linklist navlinks">
+				<li class="icon-home"><a href="http://www.freebasic.net/forum/index.php" accesskey="h">Board index</a>  <strong>‹</strong> <a href="http://www.freebasic.net/forum/viewforum.php?f=19">FreeBASIC</a> <strong>‹</strong> <a href="http://www.freebasic.net/forum/viewforum.php?f=8">Projects</a></li>
+
+				<li class="rightside"><a href="#" onclick="fontsizeup(); return false;" onkeypress="return fontsizeup(event);" class="fontsize" title="Change font size">Change font size</a></li>
+
+				
+			</ul>
+
+			
+
+			<ul class="linklist rightside">
+				<li class="icon-faq"><a href="http://www.freebasic.net/forum/faq.php" title="Frequently Asked Questions">FAQ</a></li>
+				<li class="icon-register"><a href="http://www.freebasic.net/forum/ucp.php?mode=register">Register</a></li>
+					<li class="icon-logout"><a href="http://www.freebasic.net/forum/ucp.php?mode=login" title="Login" accesskey="x">Login</a></li>
+				
+			</ul>
+
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+
+	</div>
+
+	<a name="start_here"></a>
+	<div id="page-body">
+		
+<h2><a href="http://www.freebasic.net/forum/viewtopic.php?f=8&amp;t=17909&amp;hilit=parser+generator">coco/r fb (produces scanner/parser(LL(k)),work-in-progress)</a></h2>
+<!-- NOTE: remove the style="display: none" when you want to have the forum description on the topic body --><div style="display: none !important;">User projects written in or related to FreeBASIC.<br></div>
+
+<div class="topic-actions">
+
+	<div class="buttons">
+	
+		<div class="reply-icon"><a href="http://www.freebasic.net/forum/posting.php?mode=reply&amp;f=8&amp;t=17909" title="Post a reply"><span></span>Post a reply</a></div>
+	
+	</div>
+
+	
+		<div class="search-box">
+			<form method="get" id="topic-search" action="./search.php">
+			<fieldset>
+				<input class="inputbox search tiny" name="keywords" id="search_keywords" size="20" value="Search this topic…" onclick="if(this.value=='Search this topic…')this.value='';" onblur="if(this.value=='')this.value='Search this topic…';" type="text">
+				<input class="button2" value="Search" type="submit">
+				<input name="t" value="17909" type="hidden">
+<input name="sf" value="msgonly" type="hidden">
+
+			</fieldset>
+			</form>
+		</div>
+	
+		<div class="pagination">
+			8 posts
+			 • Page <strong>1</strong> of <strong>1</strong>
+		</div>
+	
+
+</div>
+<div class="clear"></div>
+
+
+	<div id="p158057" class="post bg2">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3 class="first"><a href="#p158057">coco/r fb (produces scanner/<span class="posthilit">parser</span>(LL(k)),work-in-progress)</a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158057#p158057"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a></strong> » May 25, 2011 19:57 </p>
+
+			
+
+			<div class="content">I'm working on a translation of coco/r (compiler compiler/recursive descent) to FreeBASIC  <!-- m --><a class="postlink" href="http://ssw.jku.at/Coco/">http://ssw.jku.at/Coco/</a><!-- m -->
+<br>
+<br>I have chosen to translate the C++ version of coco/r 
+<br><!-- m --><a class="postlink" href="http://ssw.jku.at/Coco/CPP/CocoSourcesCPP.zip">http://ssw.jku.at/Coco/CPP/CocoSourcesCPP.zip</a><!-- m -->
+<br>
+<br>There are also versions of coco/r written in Java and C#.
+<br>
+<br>Source code of the project
+<br>
+<br><span class="posthilit">parser</span>/scanner <span class="posthilit">generator</span>
+<br><!-- w --><a class="postlink" href="http://www.sarmardar.nl/FreeBASIC/cocofb.bas">www.sarmardar.nl/FreeBASIC/cocofb.bas</a><!-- w -->
+<br>
+<br>frame files (used by the <span class="posthilit">generator</span>)
+<br><!-- w --><a class="postlink" href="http://www.sarmardar.nl/FreeBASIC/Parser.frame">www.sarmardar.nl/FreeBASIC/<span class="posthilit">Parser</span>.frame</a><!-- w -->
+<br><!-- w --><a class="postlink" href="http://www.sarmardar.nl/FreeBASIC/scanner.frame">www.sarmardar.nl/FreeBASIC/scanner.frame</a><!-- w -->
+<br>
+<br>example grammar (it's an incomplete json grammar)
+<br><!-- w --><a class="postlink" href="http://www.sarmardar.nl/FreeBASIC/json.atg">www.sarmardar.nl/FreeBASIC/json.atg</a><!-- w -->
+<br>
+<br>
+<br>To create a <span class="posthilit">parser</span> and a scanner for the json grammar create a directory called json and run cocofb like so
+<br>
+<br><blockquote class="uncited"><div>cocofb json.atg -o json<br></div></blockquote>
+<br>
+<br>You'll find the generated scanner and <span class="posthilit">parser</span> in the directory json.
+<br>
+<br>Example code to use the generated scanner/<span class="posthilit">parser</span> (assumes you have
+<br>already executed cocofb json.atg -o json)
+<br>
+<br><dl class="codebox"><dt>Code: <a href="#" onclick="selectCode(this); return false;">Select all</a></dt><dd><code>#include once "crt/stdio.bi"<br>#include once "scanner.bas"<br>#include once "<span class="posthilit">parser</span>.bas"<br><br>dim scanner as scanner_ ptr<br>dim <span class="posthilit">parser</span> as parser_ ptr<br><br>dim
+ s as string = 
+"[0,1,2,3,4,5,""hello"",7,8,9,10,{""object"":[1,2,""some_string""]},11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]"<br><br>scanner = scanner_create_buffer(cast(ubyte ptr,strptr(s)),len(s))<br><span class="posthilit">parser</span> = parser_create(scanner)<br>parser_parse(<span class="posthilit">parser</span>)<br>parser_destroy(<span class="posthilit">parser</span>)<br>scanner_destroy(scanner)<br></code></dd></dl>
+<br>
+<br>
+<br>Right now coco/r fb generates working parsers/scanners but it will 
+take a lot more testing before I consider the port 'finished'. 
+<br>
+<br>And there are a couple of things about coco I already do not like. 
+<br>
+<br>First of all Unicode support. It is just not good enough (it only 
+goes up to 65535 while there are over 104.000 codepoints defined). 
+<br>The number 65535 can be changed by changing a symbolic constant but I
+ don't think the C standard library has what it takes to deal with 
+unicode in a proper way. 
+<br>
+<br>And the generated scanner/<span class="posthilit">parser</span> uses
+ numbers instead of symbolic names. I am going to be using the unicode 
+character descriptions to change that (those can be quite long but I'd 
+rather have a long description than some 'magic' number).</div>
+
+			
+				<div class="notice">Last edited by <a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a> on Jun 17, 2011 1:11, edited 4 times in total.
+					
+				</div>
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158057">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1178</dd><dd><strong>Joined:</strong> Sep 25, 2007 0:26</dd><dd><strong>Location:</strong> the Netherlands</dd>
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158134" class="post bg1">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158134"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158134#p158134"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=3463">kiyotewolf</a></strong> » May 27, 2011 10:30 </p>
+
+			
+
+			<div class="content"><blockquote class="uncited"><div>(compiler compiler/recursive descent)</div></blockquote>
+<br>
+<br>Come again?
+<br>
+<br>
+<br>
+<br>:M</div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158134">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=3463">kiyotewolf</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1014</dd><dd><strong>Joined:</strong> Oct 11, 2008 7:42</dd><dd><strong>Location:</strong> ABQ, NM</dd>
+			<dd>
+				<ul class="profile-icons">
+					<li class="web-icon"><a href="http://kiyotewolf.deviantart.com/" title="WWW: http://kiyotewolf.deviantart.com"><span>Website</span></a></li><li class="yahoo-icon"><a href="http://edit.yahoo.com/config/send_webmesg?.target=kiyotewolfe%40yahoo.com&amp;.src=pg" onclick="popup(this.href, 780, 550); return false;" title="YIM"><span>YIM</span></a></li>
+				</ul>
+			</dd>
+		
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158176" class="post bg2">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158176"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158176#p158176"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a></strong> » May 28, 2011 5:04 </p>
+
+			
+
+			<div class="content"><blockquote><div><cite>kiyotewolf wrote:</cite><blockquote class="uncited"><div>(compiler compiler/recursive descent)</div></blockquote><br><br>Come again?<br><br><br><br>:M</div></blockquote>
+<br>
+<br><span style="font-weight: bold">Compiler compiler</span>
+<br><!-- m --><a class="postlink" href="http://en.wikipedia.org/wiki/Compiler-compiler">http://en.wikipedia.org/wiki/Compiler-compiler</a><!-- m -->
+<br><!-- m --><a class="postlink" href="http://en.wikipedia.org/wiki/Coco/R">http://en.wikipedia.org/wiki/Coco/R</a><!-- m -->
+<br><!-- m --><a class="postlink" href="http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf">http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf</a><!-- m -->
+<br>
+<br><span style="font-weight: bold">Recursive descent</span>
+<br><!-- m --><a class="postlink" href="http://en.wikipedia.org/wiki/Recursive_descent_parser">http://en.wikipedia.org/wiki/Recursive_descent_parser</a><!-- m -->
+<br><!-- m --><a class="postlink" href="http://www.ecs.syr.edu/faculty/mccracken/cis631/lectures/RecursiveDescent.pdf">http://www.ecs.syr.edu/faculty/mccracke ... escent.pdf</a><!-- m -->
+<br><!-- m --><a class="postlink" href="http://fbc.svn.sourceforge.net/viewvc/fbc/trunk/FreeBASIC/src/compiler/parser-compound-select.bas?revision=5576&amp;view=markup">http://fbc.svn.sourceforge.net/viewvc/f ... iew=markup</a><!-- m --></div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158176">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1178</dd><dd><strong>Joined:</strong> Sep 25, 2007 0:26</dd><dd><strong>Location:</strong> the Netherlands</dd>
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158663" class="post bg1">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158663"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158663#p158663"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a></strong> » Jun 05, 2011 4:59 </p>
+
+			
+
+			<div class="content">I've finished the port up to the point where I 
+can start testing the entire package (see first message for download 
+location). For testing purposes I'm using the following JSON grammar 
+(this grammar is LL(1)).
+<br>
+<br><blockquote class="uncited"><div>/*--json.atg--*/<br>COMPILER JSON<br><br>CHARACTERS<br>	letter    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".<br>	digit     = "0123456789".<br>  onedigit  = "123456789".<br>	cr        = '\r'.<br>	lf        = '\n'.<br>	tab       = '\t'.  <br>	stringCh  = ANY - '"' - '\\' - cr - lf.<br>	charCh    = ANY - '\'' - '\\' - cr - lf.<br>	printable =  '\u0020' .. '\u007e'.<br>	HexDigit  = "0123456789abcdefABCDEF".<br>  UnicodeChar = ANY - '"' - '\\'.<br>  colon = ':'.<br>  comma =  ','.<br>  lbrace = '{'.<br>  rbrace = '}'.<br>  lbracket = '['.<br>  rbracket = ']'.<br>  dot = '.'.<br><br>TOKENS  <br>
+  string_   = '"' {(UnicodeChar | '\\' ('"' | '\\' | '/' | 'b' | 'f' | 
+'n' | 'r' | 't' | 'u' HexDigit HexDigit HexDigit HexDigit))} '"'.<br>	integer_  = ['-'] ('0' | onedigit {digit}).<br>
+  double_   = ['-'] {digit} (((dot digit {digit}) [('E' | 'e') [('+' | 
+'-')] digit {digit}]) | (('E' | 'e') [('+' | '-')] digit {digit})).<br>  <br><br>IGNORE ' ' + cr + tab + lf<br>/*-------------------------------------------------------------------------*/<br><br>PRODUCTIONS<br><br>JSON          = (jsonObject | jsonArray).<br>jsonObject    = object.<br>jsonArray     = array.<br>object        = '{' [objectElement {',' objectElement}] '}'.<br>objectElement = string_ ':' value.<br>array         = '[' [value {','value}] ']'.<br>value         =  "false"<br>                | "true"<br>                | "none"<br>                | string_<br>                | integer_<br>                | double_<br>                | object<br>                | array<br>                .<br>               <br>END JSON.<br></div></blockquote>
+<br>
+<br>Operators used:
+<br>|  ==&gt; alternative (or)
+<br>[] ==&gt; optional construct 
+<br>() ==&gt; grouping
+<br>{} ==&gt; repeat (0 or more times)
+<br>- ==&gt; character set difference
+<br>+ ==&gt; character set union
+<br>. ==&gt; end-of-rule
+<br>
+<br>The <span class="posthilit">parser</span> gets all the way through to the first production rule (no problem with sections CHARACTERS, TOKENS or IGNORE). There the <span class="posthilit">parser</span> dies on a NULL pointer assignment :(</div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158663">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1178</dd><dd><strong>Joined:</strong> Sep 25, 2007 0:26</dd><dd><strong>Location:</strong> the Netherlands</dd>
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158665" class="post bg2">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158665"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158665#p158665"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=3463">kiyotewolf</a></strong> » Jun 05, 2011 7:50 </p>
+
+			
+
+			<div class="content"><blockquote><div><cite>AGS wrote:</cite>I've 
+finished the port up to the point where I can start testing the entire 
+package (see first message for download location). For testing purposes 
+I'm using the following JSON grammar (this grammar is LL(1)).<br><br><blockquote class="uncited"><div>/*--json.atg--*/<br>COMPILER JSON<br><br>CHARACTERS<br>	letter    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".<br>	digit     = "0123456789".<br>  onedigit  = "123456789".<br>	cr        = '\r'.<br>	lf        = '\n'.<br>	tab       = '\t'.  <br>	stringCh  = ANY - '"' - '\\' - cr - lf.<br>	charCh    = ANY - '\'' - '\\' - cr - lf.<br>	printable =  '\u0020' .. '\u007e'.<br>	HexDigit  = "0123456789abcdefABCDEF".<br>  UnicodeChar = ANY - '"' - '\\'.<br>  colon = ':'.<br>  comma =  ','.<br>  lbrace = '{'.<br>  rbrace = '}'.<br>  lbracket = '['.<br>  rbracket = ']'.<br>  dot = '.'.<br><br>TOKENS  <br>
+  string_   = '"' {(UnicodeChar | '\\' ('"' | '\\' | '/' | 'b' | 'f' | 
+'n' | 'r' | 't' | 'u' HexDigit HexDigit HexDigit HexDigit))} '"'.<br>	integer_  = ['-'] ('0' | onedigit {digit}).<br>
+  double_   = ['-'] {digit} (((dot digit {digit}) [('E' | 'e') [('+' | 
+'-')] digit {digit}]) | (('E' | 'e') [('+' | '-')] digit {digit})).<br>  <br><br>IGNORE ' ' + cr + tab + lf<br>/*-------------------------------------------------------------------------*/<br><br>PRODUCTIONS<br><br>JSON          = (jsonObject | jsonArray).<br>jsonObject    = object.<br>jsonArray     = array.<br>object        = '{' [objectElement {',' objectElement}] '}'.<br>objectElement = string_ ':' value.<br>array         = '[' [value {','value}] ']'.<br>value         =  "false"<br>                | "true"<br>                | "none"<br>                | string_<br>                | integer_<br>                | double_<br>                | object<br>                | array<br>                .<br>               <br>END JSON.<br></div></blockquote><br><br>Operators used:<br>|  ==&gt; alternative (or)<br>[] ==&gt; optional construct <br>() ==&gt; grouping<br>{} ==&gt; repeat (0 or more times)<br>- ==&gt; character set difference<br>+ ==&gt; character set union<br>. ==&gt; end-of-rule<br><br>The <span class="posthilit">parser</span> gets all the way through to the first production rule (no problem with sections CHARACTERS, TOKENS or IGNORE). There the <span class="posthilit">parser</span> dies on a NULL pointer assignment :(</div></blockquote>
+<br>
+<br>
+<br>
+<br>What is all this?  What does JSON stand for, and what does JSON do exactly?
+<br>
+<br>I know syntax highlighting, stuff, that this is about (spoken in a 
+Master Shake voice), seems like I'm looking at a new language to write 
+in.
+<br>
+<br>
+<br>
+<br>:M
+<br>
+<br>Excuse me ahead of time for being difficult.  o3o</div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158665">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=3463">kiyotewolf</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1014</dd><dd><strong>Joined:</strong> Oct 11, 2008 7:42</dd><dd><strong>Location:</strong> ABQ, NM</dd>
+			<dd>
+				<ul class="profile-icons">
+					<li class="web-icon"><a href="http://kiyotewolf.deviantart.com/" title="WWW: http://kiyotewolf.deviantart.com"><span>Website</span></a></li><li class="yahoo-icon"><a href="http://edit.yahoo.com/config/send_webmesg?.target=kiyotewolfe%40yahoo.com&amp;.src=pg" onclick="popup(this.href, 780, 550); return false;" title="YIM"><span>YIM</span></a></li>
+				</ul>
+			</dd>
+		
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158819" class="post bg1">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158819"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158819#p158819"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a></strong> » Jun 08, 2011 4:21 </p>
+
+			
+
+			<div class="content">JSON is a file format for javascript objects 
+(Java Script Object Notation). It is (fast becoming) a popular format 
+for storing data in the format of a java script object. It is part of 
+javascript (hence it's popularity as javascript is the no1 scripting 
+language) but it's use is not limited to javascript.
+<br>
+<br><!-- m --><a class="postlink" href="http://www.json.org/">http://www.json.org/</a><!-- m -->
+<br>
+<br>An example of data written in JSON format:
+<br>{"x":[100000,"FreeBASIC","programmers"]}
+<br>
+<br>The above represents an object called "x" that contains an array 
+with a number and two strings. An object functions as a hash table 
+(lookup by means of the string). You could use syntax highlighting to 
+hightlight json objects (strings in red, numbers in blue, { and } in 
+green etc..?).
+<br>
+<br>The following document pretty much explains coco/r and all it's ins 
+and outs (I will rewrite the document before a final release of coco/r 
+so it's more geared towards FB)
+<br><!-- m --><a class="postlink" href="http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf">http://www.ssw.uni-linz.ac.at/Coco/Doc/UserManual.pdf</a><!-- m -->
+<br>
+<br>Using coco/r you describe what a language looks like instead of 
+writing FreeBASIC code that recognizes the constructs of a language. So 
+instead of writing routines to recognize words coco/r generates these 
+routines for you. To make the <span class="posthilit">parser</span> do 
+something more than recognizing the language defined you have to add 
+actions to the grammar (to the part called PRODUCTIONS). 
+<br>
+<br>A very short example that prints identifiers when it finds these in a character buffer.
+<br>
+<br><dl class="codebox"><dt>Code: <a href="#" onclick="selectCode(this); return false;">Select all</a></dt><dd><code>COMPILER simple<br><br>CHARACTERS<br>lower = 'a' .. 'z'.<br>upper = 'A' .. 'Z'.<br>digit = '0' .. '9'.<br>underscore = '_'.<br>char = upper + lower.<br>ident_char1 = char + digit.<br>ident_char2 = ident_char + digit + underscore.<br><br>TOKENS<br>identifier = (underscore {ident_char1}) | (char {ident_char2}).<br><br>PRODUCTIONS<br><br>simple = <br>{<br>identifier (. print "identifier = ";<span class="posthilit">parser</span>-&gt;t-&gt;val .)<br>| ANY&nbsp; &nbsp; &nbsp; &nbsp;<br>}&nbsp; &nbsp; &nbsp; &nbsp; <br>.<br></code></dd></dl><br><br>Running
+ coco/r on the above grammar (name of the grammar file:simple.atg) would
+ result in the creation of two files: scanner.bas and <span class="posthilit">parser</span>.bas.<br><br>scanner.bas contains routines to<br>- create a scanner<br>- scan with input coming from either a file, a string or something else (direct input from keyboard).<br><br>Creating a scanner for a character buffer would look like this<br><dl class="codebox"><dt>Code: <a href="#" onclick="selectCode(this); return false;">Select all</a></dt><dd><code>var scanner = scanner_create_buffer(buffer,buffer_length)<br></code></dd></dl><br><br>where
+ buffer is of type ubyte ptr  and buffer_length denotes the number of 
+ubytes in the buffer (buffer could be the contents of a text file).<br><br><span class="posthilit">Parser</span>.bas contains routines to <br>- create a <span class="posthilit">parser</span> and <br>- parse a file using a scanner.<br><br>create a <span class="posthilit">parser</span> and a scanner<br><dl class="codebox"><dt>Code: <a href="#" onclick="selectCode(this); return false;">Select all</a></dt><dd><code>var scanner = scanner_create_buffer(buffer,buffer_length)<br>var <span class="posthilit">parser</span> = parser_create(scanner)<br></code></dd></dl><br><br>An easy way to create a <span class="posthilit">parser</span>
+ would be to create a file called test_parser.bas with the following 
+content (assuming you have used coco/r on the grammar file and output is
+ in scanner.bas and <span class="posthilit">parser</span>.bas):<br><br><dl class="codebox"><dt>Code: <a href="#" onclick="selectCode(this); return false;">Select all</a></dt><dd><code>#include "scanner.bas"<br>#include "<span class="posthilit">parser</span>.bas"<br><br>dim buffer as string = "hello world"<br>dim zstr as zstring ptr = strptr(buffer)<br>dim byte_array as ubyte ptr = cast(ubyte ptr,zstr)<br>var scanner = scanner_create(byte_array,len(buffer))<br>var <span class="posthilit">parser</span> = parser_create(scanner)<br>parser_parse(<span class="posthilit">parser</span>)<br></code></dd></dl>
+<br>
+<br>Then compile using fbc test_parser.bas and execute test_parser.exe
+<br>
+<br>output
+<br><blockquote class="uncited"><div>identifier = hello<br>identifier = world<br></div></blockquote>
+<br>
+<br>
+<br>And if you have syntax highlighting code then by all means post it 
+here as a message. I can use it as a test case for coco/r by writing an 
+equivalent syntax highlighter using coco/r.
+<br>
+<br>I hope to get coco/r working asap (it'll be much easier to explain how it works when coco/r actually creates code).</div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158819">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1178</dd><dd><strong>Joined:</strong> Sep 25, 2007 0:26</dd><dd><strong>Location:</strong> the Netherlands</dd>
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158820" class="post bg2">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158820"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158820#p158820"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=3463">kiyotewolf</a></strong> » Jun 08, 2011 4:29 </p>
+
+			
+
+			<div class="content">@AGS
+<br>
+<br>Hey, AGS, that was THE BEST tut on something, an A to my Q, that I've seen in AWHILE here.
+<br>
+<br>I'm really stoaked about JSON now, I'm going to print the entire manual, and other documentation, and make myself a hard copy.
+<br>
+<br>Do you need or want any hard copies of anything?  I have a laser printer now.
+<br>
+<br>
+<br>
+<br>:M
+<br>
+<br>And yes I'll comp the shipping costs on mailing.</div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158820">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=3463">kiyotewolf</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1014</dd><dd><strong>Joined:</strong> Oct 11, 2008 7:42</dd><dd><strong>Location:</strong> ABQ, NM</dd>
+			<dd>
+				<ul class="profile-icons">
+					<li class="web-icon"><a href="http://kiyotewolf.deviantart.com/" title="WWW: http://kiyotewolf.deviantart.com"><span>Website</span></a></li><li class="yahoo-icon"><a href="http://edit.yahoo.com/config/send_webmesg?.target=kiyotewolfe%40yahoo.com&amp;.src=pg" onclick="popup(this.href, 780, 550); return false;" title="YIM"><span>YIM</span></a></li>
+				</ul>
+			</dd>
+		
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<div id="p158942" class="post bg1">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<div class="postbody">
+			
+
+			<h3><a href="#p158942"></a></h3>
+			<p class="author"><a href="http://www.freebasic.net/forum/viewtopic.php?p=158942#p158942"><img src="freebasic.net%20%E2%80%A2%20View%20topic%20-%20coco_r%20fb%20%28produces%20scanner_parser%28LL%28k%29%29,work-in-progress%29_files/icon_post_target.gif" alt="Post" title="Post" height="9" width="11"></a>by <strong><a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a></strong> » Jun 10, 2011 6:16 </p>
+
+			
+
+			<div class="content"><blockquote><div><cite>kiyotewolf wrote:</cite>@AGS<br><br>Hey, AGS, that was THE BEST tut on something, an A to my Q, that I've seen in AWHILE here.<br><br>I'm really stoaked about JSON now, I'm going to print the entire manual, and other documentation, and make myself a hard copy.<br><br>Do you need or want any hard copies of anything?  I have a laser printer now.<br><br><br><br>:M<br><br>And yes I'll comp the shipping costs on mailing.</div></blockquote>
+<br>
+<br>No, I don't need hard copies of anything at the moment. But thanks for offering.
+<br>
+<br>There are a couple of json parsers written in fb (you'll find at 
+least two implementations on this forum) and there are fb bindings to 
+cjson (a C based json <span class="posthilit">parser</span>) on google
+<br><!-- m --><a class="postlink" href="http://code.google.com/p/freebasic-headers/source/browse/#hg%2Finc%2Fjson-c">http://code.google.com/p/freebasic-head ... c%2Fjson-c</a><!-- m --></div>
+
+			
+
+		</div>
+
+		
+			<dl class="postprofile" id="profile158942">
+			<dt>
+				<a href="http://www.freebasic.net/forum/memberlist.php?mode=viewprofile&amp;u=2316">AGS</a>
+			</dt>
+
+			<dd>Master</dd>
+
+		<dd>&nbsp;</dd>
+
+		<dd><strong>Posts:</strong> 1178</dd><dd><strong>Joined:</strong> Sep 25, 2007 0:26</dd><dd><strong>Location:</strong> the Netherlands</dd>
+
+		</dl>
+	
+
+		<div class="back2top"><a href="#wrap" class="top" title="Top">Top</a></div>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<hr class="divider">
+
+	<form id="viewtopic" method="post" action="./viewtopic.php?f=8&amp;t=17909">
+
+	<fieldset class="display-options" style="margin-top: 0; ">
+		
+		<label>Display posts from previous: <select name="st" id="st"><option value="0" selected="selected">All posts</option><option value="1">1 day</option><option value="7">7 days</option><option value="14">2 weeks</option><option value="30">1 month</option><option value="90">3 months</option><option value="180">6 months</option><option value="365">1 year</option></select></label>
+		<label>Sort by <select name="sk" id="sk"><option value="a">Author</option><option value="t" selected="selected">Post time</option><option value="s">Subject</option></select></label> <label><select name="sd" id="sd"><option value="a" selected="selected">Ascending</option><option value="d">Descending</option></select> <input name="sort" value="Go" class="button2" type="submit"></label>
+		
+	</fieldset>
+
+	</form>
+	<hr>
+
+
+<div class="topic-actions">
+	<div class="buttons">
+	
+		<div class="reply-icon"><a href="http://www.freebasic.net/forum/posting.php?mode=reply&amp;f=8&amp;t=17909" title="Post a reply"><span></span>Post a reply</a></div>
+	
+	</div>
+
+	
+		<div class="pagination">
+			8 posts
+			 • Page <strong>1</strong> of <strong>1</strong>
+		</div>
+	
+</div>
+
+
+	<p></p><p><a href="http://www.freebasic.net/forum/viewforum.php?f=8" class="left-box left" accesskey="r">Return to Projects</a></p>
+
+	<form method="post" id="jumpbox" action="./viewforum.php" onsubmit="if(this.f.value == -1){return false;}">
+
+	
+		<fieldset class="jumpbox">
+	
+			<label for="f" accesskey="j">Jump to:</label>
+			<select name="f" id="f" onchange="if(this.options[this.selectedIndex].value != -1){ document.forms['jumpbox'].submit() }">
+			
+				<option value="-1">Select a forum</option>
+			<option value="-1">------------------</option>
+				<option value="19">FreeBASIC</option>
+			
+				<option value="1">&nbsp; &nbsp;News</option>
+			
+				<option value="17">&nbsp; &nbsp;Community Discussion</option>
+			
+				<option value="8" selected="selected">&nbsp; &nbsp;Projects</option>
+			
+				<option value="7">&nbsp; &nbsp;Tips and Tricks</option>
+			
+				<option value="20">Programming</option>
+			
+				<option value="2">&nbsp; &nbsp;Beginners</option>
+			
+				<option value="3">&nbsp; &nbsp;General</option>
+			
+				<option value="18">&nbsp; &nbsp;Hardware Interfaces / Communication</option>
+			
+				<option value="14">&nbsp; &nbsp;Libraries</option>
+			
+				<option value="15">&nbsp; &nbsp;Game Dev</option>
+			
+				<option value="21">Platforms</option>
+			
+				<option value="4">&nbsp; &nbsp;DOS</option>
+			
+				<option value="5">&nbsp; &nbsp;Linux</option>
+			
+				<option value="6">&nbsp; &nbsp;Windows</option>
+			
+				<option value="23">Misc</option>
+			
+				<option value="9">&nbsp; &nbsp;Documentation</option>
+			
+			</select>
+			<input value="Go" class="button2" type="submit">
+		</fieldset>
+	</form>
+
+
+	<h3>Who is online</h3>
+	<p>Users browsing this forum: No registered users and 2 guests</p>
+</div>
+
+<div id="page-footer">
+
+	<div class="navbar">
+		<div class="inner"><span class="corners-top"><span></span></span>
+
+		<ul class="linklist">
+			<li class="icon-home"><a href="http://www.freebasic.net/forum/index.php" accesskey="h">Board index</a></li>
+				
+			<li class="rightside"><a href="http://www.freebasic.net/forum/memberlist.php?mode=leaders">The team</a> • <a href="http://www.freebasic.net/forum/ucp.php?mode=delete_cookies">Delete all board cookies</a> • All times are UTC </li>
+		</ul>
+
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+
+	<div class="copyright">Powered by <a href="http://www.phpbb.com/">phpBB</a>® Forum Software © phpBB Group
+		
+	</div>
+</div>
+
+</div>
+
+<div>
+	<a id="bottom" name="bottom" accesskey="z"></a>
+	
+</div>
+
+
+</body></html>

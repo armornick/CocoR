@@ -1,0 +1,580 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><title>A "parser" grammar for the Java programming language</title>
+
+  <link rel="stylesheet" href="styles/title.css">
+  <link rel="stylesheet" href="styles/grammar.css">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <meta name="Description" content="">
+  <meta name="keywords" content=""></head>
+
+<body>
+
+<h1>A Parser grammar for the Java programming language</h1>
+<p></p><center><small><b>
+  <a href="#Grammar">Grammar</a>
+  | <a href="#Classes">Classes</a>
+  | <a href="#Interfaces">Interfaces</a>
+  | <a href="#Statements">Statements</a>
+  | <a href="#Expressions">Expressions</a>
+  | <a href="#Index">Index</a>
+</b></small></center>
+
+<pre id="myid">
+<a class="grammar" name="Grammar"><h3>Grammar</h3></a>
+
+<i><a class="grammar" name="CompilationUnit">CompilationUnit</a></i>
+<font color="purple">=</font> <font color="red"><i>[</i></font><font color="blue">"package"</font> <i><a class="grammar" href="#Qualident">Qualident</a></i> <font color="blue">';'</font><font color="red"><i>]</i></font> <font color="red"><i>{</i></font><i><a class="grammar" href="#ImportDeclaration">ImportDeclaration</a></i><font color="red"><i>}</i></font> <font color="red"><i>{</i></font><i><a class="grammar" href="#TypeDeclaration">TypeDeclaration</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Qualident">Qualident</a></i>
+<font color="purple">=</font> <i>ident</i> <font color="red"><i>{</i></font><font color="blue">'.'</font> <i>ident</i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ImportDeclaration">ImportDeclaration</a></i>
+<font color="purple">=</font> <font color="blue">"import"</font> <i>ident</i> <i><a class="grammar" href="#QualifiedImport">QualifiedImport</a></i> <font color="blue">';'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="QualifiedImport">QualifiedImport</a></i>
+<font color="purple"><i>=</i></font> <font color="blue">'.'</font> <font color="red"><i>(</i></font><i>ident</i> <font color="red"><i>[</i></font><a class="grammar" href="#QualifiedImport">QualifiedImport</a></i><font color="red"><i>]</i></font> <font color="purple">|</font> <font color="blue">'*'</font><font color="red"><i>)</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="TypeDeclaration">TypeDeclaration</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a></i>
+<font color="purple">|</font> <font color="blue">';'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a></i>
+<font color="purple"><i>=</i></font> <font color="red"><i>{</i></font><i><a class="grammar" href="#ClassModifier">ClassModifier</a></i><font color="red"><i>}</i></font> <font color="red"><i>(</i></font><i><a class="grammar" href="#ClassDeclaration">ClassDeclaration</a></i> <font color="purple"><i>|</i></font> <i><a class="grammar" href="#InterfaceDeclaration">InterfaceDeclaration</a></i><font color="red"><i>)</i></font>
+<font color="purple"><i>.</i></font>
+
+<i><a class="grammar" name="ClassModifier">ClassModifier</a></i>
+<font color="purple">=</font> <font color="blue">"public"</font>
+<font color="purple">|</font> <font color="blue">"protected"</font>
+<font color="purple">|</font> <font color="blue">"private"</font>
+<font color="purple">|</font> <font color="blue">"abstract"</font>
+<font color="purple">|</font> <font color="blue">"static"</font>
+<font color="purple">|</font> <font color="blue">"final"</font>
+<font color="purple">|</font> <font color="blue">"strictfp"</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Modifier">Modifier</a></i>
+<font color="purple">=</font> <font color="blue">"static"</font>
+<font color="purple">|</font> <i><a class="grammar" href="#Modifier1">Modifier1</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Modifier1">Modifier1</a></i>
+<font color="purple">=</font> <font color="blue">"public"</font>
+<font color="purple">|</font> <font color="blue">"protected"</font>
+<font color="purple">|</font> <font color="blue">"private"</font>
+<font color="purple">|</font> <font color="blue">"abstract"</font>
+<font color="purple">|</font> <font color="blue">"final"</font>
+<font color="purple">|</font> <font color="blue">"native"</font>
+<font color="purple">|</font> <font color="blue">"synchronized"</font>
+<font color="purple">|</font> <font color="blue">"transient"</font>
+<font color="purple">|</font> <font color="blue">"volatile"</font>
+<font color="purple">|</font> <font color="blue">"strictfp"</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Type">Type</a></i>
+<font color="purple">=</font> <font color="red"><i>(</i></font><i> <a class="grammar" href="#Qualident">Qualident</a></i>
+  <font color="purple">|</font> <i><a class="grammar" href="#BasicType">BasicType</a></i>
+  <font color="red"><i>)</i></font> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="BasicType">BasicType</a></i>
+<font color="purple">=</font> <font color="blue">"byte"</font>
+<font color="purple">|</font> <font color="blue">"short"</font>
+<font color="purple">|</font> <font color="blue">"char"</font>
+<font color="purple">|</font> <font color="blue">"int"</font>
+<font color="purple">|</font> <font color="blue">"long"</font>
+<font color="purple">|</font> <font color="blue">"float"</font>
+<font color="purple">|</font> <font color="blue">"double"</font>
+<font color="purple">|</font> <font color="blue">"boolean"</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="BracketsOpt">BracketsOpt</a></i>
+<font color="purple">=</font> <font color="red"><i>{</i></font><font color="blue">'['</font> <font color="blue">']'</font><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="TypeList">TypeList</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Type">Type</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#Type">Type</a></i><font color="red"><i>}</i></font>
+<font color="purple"><i>.</i></font>
+
+<i><a class="grammar" name="FormalParameter">FormalParameter</a></i>
+<font color="purple">=</font> <font color="red"><i>[</i></font><font color="blue">"final"</font><font color="red"><i>]</i></font> <i><a class="grammar" href="#Type">Type</a></i> <i><a class="grammar" href="#VariableDeclaratorId">VariableDeclaratorId</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="QualidentList">QualidentList</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Qualident">Qualident</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#Qualident">Qualident</a></i><font color="red"><i>}</i></font>
+<font color="purple"><i>.</i></font>
+
+<i><a class="grammar" name="VariableDeclarator">VariableDeclarator</a></i>
+<font color="purple">=</font> <i>ident</i> <i><a class="grammar" href="#VariableDeclaratorRest">VariableDeclaratorRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="VariableDeclaratorId">VariableDeclaratorId</a></i>
+<font color="purple">=</font> <i>ident</i> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i>
+<font color="purple"><i>.</i></font>
+
+<i><a class="grammar" name="VariableDeclaratorRest">VariableDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <font color="red"><i>[</i></font><font color="blue">'='</font> <i><a class="grammar" href="#VariableInitializer">VariableInitializer</a></i><font color="red"><i>]</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="VariableInitializer">VariableInitializer</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#ArrayInitializer">ArrayInitializer</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#Expression">Expression</a></i>
+<font color="purple">.</font>
+
+<a class="grammar" name="Classes"><h3>Classes</h3></a>
+
+<i><a class="grammar" name="ClassDeclaration">ClassDeclaration</a></i>
+<font color="purple">=</font> <font color="blue">"class"</font> <i>ident</i> <font color="red"><i>[</i></font><font color="blue">"extends"</font> <i><a class="grammar" href="#Type">Type</a></i><font color="red"><i>]</i></font> <font color="red"><i>[</i></font><font color="blue">"implements"</font> <i><a class="grammar" href="#TypeList">TypeList</a></i><font color="red"><i>]</i></font> <i><a class="grammar" href="#ClassBody">ClassBody</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ClassBody">ClassBody</a></i>
+<font color="purple">=</font> <font color="blue">'{'</font> <font color="red"><i>{</i></font><i><a class="grammar" href="#ClassBodyDeclaration">ClassBodyDeclaration</a></i><font color="red"><i>}</i></font> <font color="blue">'}'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ClassBodyDeclaration">ClassBodyDeclaration</a></i>
+<font color="purple"><i>=</i></font> <font color="blue">';'</font>
+<font color="purple"><i>|</i></font> <font color="red"><i>[</i></font><font color="blue">"static"</font><font color="red"><i>]</i></font> <font color="red"><i>(</i></font> <i><a class="grammar" href="#Block">Block</a></i>
+             <font color="purple"><i>|</i></font> <font color="red"><i>[</i></font> <i><a class="grammar" href="#Modifier1">Modifier1</a></i> <font color="red"><i>{</i></font><i><a class="grammar" href="#Modifier">Modifier</a></i><font color="red"><i>}</i></font> <font color="red"><i>]</i></font> <i><a class="grammar" href="#MemberDecl">MemberDecl</a></i>
+             <font color="red"><i>)</i></font>
+<font color="purple"><i>.</i></font>
+
+<i><a class="grammar" name="MemberDecl">MemberDecl</a></i>
+<font color="purple">=</font> <font color="red"><strong>IF(</strong>identAndLPar()<strong>)</strong></font> <i>ident</i> <i><a class="grammar" href="#ConstructorDeclaratorRest">ConstructorDeclaratorRest</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#MethodOrFieldDecl">MethodOrFieldDecl</a></i>
+<font color="purple">|</font> <font color="blue">"void"</font> <i>ident</i> <i><a class="grammar" href="#VoidMethodDeclaratorRest">VoidMethodDeclaratorRest</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#ClassDeclaration">ClassDeclaration</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#InterfaceDeclaration">InterfaceDeclaration</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="MethodOrFieldDecl">MethodOrFieldDecl</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Type">Type</a></i> <i>ident</i> <i><a class="grammar" href="#MethodOrFieldRest">MethodOrFieldRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="MethodOrFieldRest">MethodOrFieldRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#VariableDeclaratorsRest">VariableDeclaratorsRest</a></i> <font color="blue">';'</font>
+<font color="purple">|</font> <i><a class="grammar" href="#MethodDeclaratorRest">MethodDeclaratorRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="VariableDeclaratorsRest">VariableDeclaratorsRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#VariableDeclaratorRest">VariableDeclaratorRest</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#VariableDeclarator">VariableDeclarator</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ArrayInitializer">ArrayInitializer</a></i>
+<font color="purple">=</font> <font color="blue">'{'</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#VariableInitializer">VariableInitializer</a></i> <font color="red"><i>{</i></font> <font color="red"><strong>IF(</strong>commaAndNoRBrace()<strong>)</strong></font> <font color="blue">','</font> <i><a class="grammar" href="#VariableInitializer">VariableInitializer</a></i> <font color="red"><i>}</i></font><font color="red"><i>]</i></font> <font color="red"><i>[</i></font><font color="blue">','</font><font color="red"><i>]</i></font> <font color="blue">'}'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="MethodDeclaratorRest">MethodDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#FormalParameters">FormalParameters</a></i> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <font color="red"><i>[</i></font><font color="blue">"throws"</font> <i><a class="grammar" href="#QualidentList">QualidentList</a></i><font color="red"><i>]</i></font> <font color="red"><i>(</i></font><i><a class="grammar" href="#Block">Block</a></i> <font color="purple"><i>|</i></font> <font color="blue">';'</font><font color="red"><i>)</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="VoidMethodDeclaratorRest">VoidMethodDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#FormalParameters">FormalParameters</a></i> <font color="red"><i>[</i></font><font color="blue">"throws"</font> <i><a class="grammar" href="#QualidentList">QualidentList</a></i><font color="red"><i>]</i></font> <font color="red"><i>(</i></font><i><a class="grammar" href="#Block">Block</a></i> <font color="purple"><i>|</i></font> <font color="blue">';'</font><font color="red"><i>)</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ConstructorDeclaratorRest">ConstructorDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#FormalParameters">FormalParameters</a></i> <font color="red"><i>[</i></font><font color="blue">"throws"</font> <i><a class="grammar" href="#QualidentList">QualidentList</a></i><font color="red"><i>]</i></font> <i><a class="grammar" href="#Block">Block</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="FormalParameters">FormalParameters</a></i>
+<font color="purple">=</font> <font color="blue">'('</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#FormalParameter">FormalParameter</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#FormalParameter">FormalParameter</a></i><font color="red"><i>}</i></font><font color="red"><i>]</i></font> <font color="blue">')'</font>
+<font color="purple">.</font>
+
+<a class="grammar" name="Interfaces"><h3>Interfaces</h3></a>
+
+<i><a class="grammar" name="InterfaceDeclaration">InterfaceDeclaration</a></i>
+<font color="purple">=</font> <font color="blue">"interface"</font> <i>ident</i> <font color="red"><i>[</i></font><font color="blue">"extends"</font> <i><a class="grammar" href="#TypeList">TypeList</a></i><font color="red"><i>]</i></font> <i><a class="grammar" href="#InterfaceBody">InterfaceBody</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InterfaceBody">InterfaceBody</a></i>
+<font color="purple">=</font> <font color="blue">'{'</font> <font color="red"><i>{</i></font><i><a class="grammar" href="#InterfaceBodyDeclaration">InterfaceBodyDeclaration</a></i><font color="red"><i>}</i></font> <font color="blue">'}'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InterfaceBodyDeclaration">InterfaceBodyDeclaration</a></i>
+<font color="purple">=</font> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="red"><i>{</i></font><i><a class="grammar" href="#Modifier">Modifier</a></i><font color="red"><i>}</i></font> <i><a class="grammar" href="#InterfaceMemberDecl">InterfaceMemberDecl</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InterfaceMemberDecl">InterfaceMemberDecl</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a></i>
+<font color="purple">|</font> <font color="blue">"void"</font> <i>ident</i> <i><a class="grammar" href="#VoidInterfaceMethodDeclaratorRest">VoidInterfaceMethodDeclaratorRest</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#ClassDeclaration">ClassDeclaration</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#InterfaceDeclaration">InterfaceDeclaration</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Type">Type</a></i> <i>ident</i> <i><a class="grammar" href="#InterfaceMethodOrFieldRest">InterfaceMethodOrFieldRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InterfaceMethodOrFieldRest">InterfaceMethodOrFieldRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#ConstantDeclaratorsRest">ConstantDeclaratorsRest</a></i> <font color="blue">';'</font>
+<font color="purple">|</font> <i><a class="grammar" href="#InterfaceMethodDeclaratorRest">InterfaceMethodDeclaratorRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ConstantDeclaratorsRest">ConstantDeclaratorsRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#ConstantDeclaratorRest">ConstantDeclaratorRest</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#ConstantDeclarator">ConstantDeclarator</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ConstantDeclaratorRest">ConstantDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <font color="blue">'='</font> <i><a class="grammar" href="#VariableInitializer">VariableInitializer</a></i>
+<font color="purple"><i>.</i></font>
+
+<i><a class="grammar" name="ConstantDeclarator">ConstantDeclarator</a></i>
+<font color="purple">=</font> <i>ident</i> <i><a class="grammar" href="#ConstantDeclaratorRest">ConstantDeclaratorRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InterfaceMethodDeclaratorRest">InterfaceMethodDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#FormalParameters">FormalParameters</a></i> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <font color="red"><i>[</i></font><font color="blue">"throws"</font> <i><a class="grammar" href="#QualidentList">QualidentList</a></i><font color="red"><i>]</i></font> <font color="blue">';'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="VoidInterfaceMethodDeclaratorRest">VoidInterfaceMethodDeclaratorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#FormalParameters">FormalParameters</a></i> <font color="red"><i>[</i></font><font color="blue">"throws"</font> <i><a class="grammar" href="#QualidentList">QualidentList</a></i><font color="red"><i>]</i></font> <font color="blue">';'</font>
+<font color="purple">.</font>
+
+<a class="grammar" name="Statements"><h3>Statements</h3></a>
+
+<i><a class="grammar" name="Statement">Statement</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Block">Block</a></i>
+<font color="purple">|</font> <font color="blue">"if"</font> <i><a class="grammar" href="#ParExpression">ParExpression</a></i> <i><a class="grammar" href="#Statement">Statement</a></i> <font color="red"><i>[</i></font><font color="blue">"else"</font> <i><a class="grammar" href="#Statement">Statement</a></i><font color="red"><i>]</i></font>
+<font color="purple">|</font> <font color="blue">"for"</font> <font color="blue">'('</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#ForInit">ForInit</a></i><font color="red"><i>]</i></font> <font color="blue">';'</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#Expression">Expression</a></i><font color="red"><i>]</i></font> <font color="blue">';'</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#ForUpdate">ForUpdate</a></i><font color="red"><i>]</i></font> <font color="blue">')'</font> <i><a class="grammar" href="#Statement">Statement</a></i>
+<font color="purple">|</font> <font color="blue">"while"</font> <i><a class="grammar" href="#ParExpression">ParExpression</a></i> <i><a class="grammar" href="#Statement">Statement</a></i>
+<font color="purple">|</font> <font color="blue">"do"</font> <i><a class="grammar" href="#Statement">Statement</a></i> <font color="blue">"while"</font> <i><a class="grammar" href="#ParExpression">ParExpression</a></i> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="blue">"try"</font> <i><a class="grammar" href="#Block">Block</a></i> <font color="red"><i>(</i></font><i><a class="grammar" href="#Catches">Catches</a></i> <font color="red"><i>[</i></font><font color="blue">"finally"</font> <i><a class="grammar" href="#Block">Block</a></i><font color="red"><i>]</i></font> <font color="purple"><i>|</i></font> <font color="blue">"finally"</font> <i><a class="grammar" href="#Block">Block</a></i><font color="red"><i>)</i></font>
+<font color="purple">|</font> <font color="blue">"switch"</font> <i><a class="grammar" href="#ParExpression">ParExpression</a></i> <font color="blue">'{'</font> <i><a class="grammar" href="#SwitchBlockStatementGroups">SwitchBlockStatementGroups</a></i> <font color="blue">'}'</font>
+<font color="purple">|</font> <font color="blue">"synchronized"</font> <i><a class="grammar" href="#ParExpression">ParExpression</a></i> <i><a class="grammar" href="#Block">Block</a></i>
+<font color="purple">|</font> <font color="blue">"return"</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#Expression">Expression</a></i><font color="red"><i>]</i></font> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="blue">"throw"</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="blue">"break"</font> <font color="red"><i>[</i></font><i>ident</i><font color="red"><i>]</i></font> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="blue">"continue"</font> <font color="red"><i>[</i></font><i>ident</i><font color="red"><i>]</i></font> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="blue">';'</font>
+<font color="purple">|</font> <font color="red"><strong>IF(</strong>isLabel()<strong>)</strong></font> <i>ident</i> <font color="blue">':'</font> <i><a class="grammar" href="#Statement">Statement</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#StatementExpression">StatementExpression</a></i> <font color="blue">';'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Block">Block</a></i>
+<font color="purple">=</font> <font color="blue">'{'</font> <font color="red"><i>{</i></font><i><a class="grammar" href="#BlockStatement">BlockStatement</a></i><font color="red"><i>}</i></font> <font color="blue">'}'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="BlockStatement">BlockStatement</a></i>
+<font color="purple">=</font> <font color="red"><strong>IF(</strong>isLocalVarDecl(false)<strong>)</strong></font> <i><a class="grammar" href="#LocalVariableDeclaration">LocalVariableDeclaration</a></i> <font color="blue">';'</font>
+<font color="purple">|</font> <i><a class="grammar" href="#ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#Statement">Statement</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="LocalVariableDeclaration">LocalVariableDeclaration</a></i>
+<font color="purple">=</font></font> <font color="red"><i>[</i></font><font color="blue">"final"</font><font color="red"><i>]</i></font> <i><a class="grammar" href="#Type">Type</a></i> <i><a class="grammar" href="#VariableDeclarators">VariableDeclarators</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="VariableDeclarators">VariableDeclarators</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#VariableDeclarator">VariableDeclarator</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#VariableDeclarator">VariableDeclarator</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ForInit">ForInit</a></i>
+<font color="purple">=</font> <font color="red"><strong>IF(</strong>isLocalVarDecl(true)<strong>)</strong></font> <i><a class="grammar" href="#LocalVariableDeclaration">LocalVariableDeclaration</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#StatementExpression">StatementExpression</a></i> <i><a class="grammar" href="#MoreStatementExpressions">MoreStatementExpressions</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ForUpdate">ForUpdate</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#StatementExpression">StatementExpression</a></i> <i><a class="grammar" href="#MoreStatementExpressions">MoreStatementExpressions</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="StatementExpression">StatementExpression</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Expression">Expression</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="MoreStatementExpressions">MoreStatementExpressions</a></i>
+<font color="purple">=</font> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#StatementExpression">StatementExpression</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Catches">Catches</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#CatchClause">CatchClause</a></i> <font color="red"><i>{</i></font><i><a class="grammar" href="#CatchClause">CatchClause</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="CatchClause">CatchClause</a></i>
+<font color="purple">=</font> <font color="blue">"catch"</font> <font color="blue">'('</font> <i><a class="grammar" href="#FormalParameter">FormalParameter</a></i> <font color="blue">')'</font> <i><a class="grammar" href="#Block">Block</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="SwitchBlockStatementGroups">SwitchBlockStatementGroups</a></i>
+<font color="purple">=</font> <font color="red"><i>{</i></font><i><a class="grammar" href="#SwitchBlockStatementGroup">SwitchBlockStatementGroup</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="SwitchBlockStatementGroup">SwitchBlockStatementGroup</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#SwitchLabel">SwitchLabel</a></i> <font color="red"><i>{</i></font><i><a class="grammar" href="#BlockStatement">BlockStatement</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="SwitchLabel">SwitchLabel</a></i>
+<font color="purple">=</font> <font color="blue">"case"</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">':'</font>
+<font color="purple">|</font> <font color="blue">"default"</font> <font color="blue">':'</font>
+<font color="purple">.</font>
+
+<a class="grammar" name="Expressions"><h3>Expressions</h3></a>
+
+<i><a class="grammar" name="Expression">Expression</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Expression1">Expression1</a></i> <font color="red"><i>{</i></font><i><a class="grammar" href="#AssignmentOperator">AssignmentOperator</a></i> <i><a class="grammar" href="#Expression1">Expression1</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Expression1">Expression1</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Expression2">Expression2</a></i> <font color="red"><i>[</i></font><i><a class="grammar" href="#ConditionalExpr">ConditionalExpr</a></i><font color="red"><i>]</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ConditionalExpr">ConditionalExpr</a></i>
+<font color="purple">=</font> <font color="blue">'?'</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">':'</font> <i><a class="grammar" href="#Expression1">Expression1</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Expression2">Expression2</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Expression3">Expression3</a></i> <font color="red"><i>[</i></font><i><a class="grammar" href="#Expression2Rest">Expression2Rest</a></i><font color="red"><i>]</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Expression2Rest">Expression2Rest</a></i>
+<font color="purple">=</font> <font color="red"><i>{</i></font><i><a class="grammar" href="#Infixop">Infixop</a></i> <i><a class="grammar" href="#Expression3">Expression3</a></i><font color="red"><i>}</i></font>
+<font color="purple">|</font> <font color="blue">"instanceof"</font> <i><a class="grammar" href="#Type">Type</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Expression3">Expression3</a></i>
+<font color="purple">=</font> <font color="red"><i>{</i></font> <font color="red"><strong>IF(</strong>isPrefix() || isTypeCast()<strong>)</strong></font>
+    <font color="red"><i>(</i></font> <i><a class="grammar" href="#PrefixOp">PrefixOp</a></i>
+    <font color="purple">|</font> <font color="blue">'('</font> <i><a class="grammar" href="#Type">Type</a></i> <font color="blue">')'</font>
+    <font color="red"><i>)</i></font>
+  <font color="red"><i>}</i></font>
+  <i><a class="grammar" href="#Primary">Primary</a></i> <font color="red"><i>{</i></font><i><a class="grammar" href="#Selector">Selector</a></i><font color="red"><i>}</i></font> <font color="red"><i>{</i></font><i><a class="grammar" href="#PostfixOp">PostfixOp</a></i><font color="red"><i>}</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Primary">Primary</a></i>
+<font color="purple">=</font> <font color="blue">'('</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">')'</font>
+<font color="purple">|</font> <font color="blue">"this"</font> <i><a class="grammar" href="#ArgumentsOpt">ArgumentsOpt</a></i>
+<font color="purple">|</font> <font color="blue">"super"</font> <i><a class="grammar" href="#SuperSuffix">SuperSuffix</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#Literal">Literal</a></i>
+<font color="purple">|</font> <font color="blue">"new"</font> <i><a class="grammar" href="#Creator">Creator</a></i>
+<font color="purple">|</font> <i>ident</i> <font color="red"><i>{</i></font> <font color="red"><strong>IF(</strong>dotAndIdent()<strong>)</strong></font> <font color="blue">'.'</font> <i>ident</i> <font color="red"><i>}</i></font> <font color="red"><i>[</i></font> <font color="red"><strong>IF(</strong>isIdentSuffix()<strong>)</strong></font> <i><a class="grammar" href="#IdentifierSuffix">IdentifierSuffix</a></i> <font color="red"><i>]</i></font>
+<font color="purple">|</font> <i><a class="grammar" href="#BasicType">BasicType</a></i> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <font color="blue">'.'</font> <font color="blue">"class"</font>
+<font color="purple">|</font> <font color="blue">"void"</font> <font color="blue">'.'</font> <font color="blue">"class"</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ArgumentsOpt">ArgumentsOpt</a></i>
+<font color="purple">=</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#Arguments">Arguments</a></i><font color="red"><i>]</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Arguments">Arguments</a></i>
+<font color="purple">=</font> <font color="blue">'('</font> <font color="red"><i>[</i></font><i><a class="grammar" href="#Expression">Expression</a></i> <font color="red"><i>{</i></font><font color="blue">','</font> <i><a class="grammar" href="#Expression">Expression</a></i><font color="red"><i>}</i></font><font color="red"><i>]</i></font> <font color="blue">')'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="SuperSuffix">SuperSuffix</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Arguments">Arguments</a></i>
+<font color="purple">|</font> <font color="blue">'.'</font> <i>ident</i> <i><a class="grammar" href="#ArgumentsOpt">ArgumentsOpt</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Literal">Literal</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#IntegerLiteral">IntegerLiteral</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#FloatingPointLiteral">FloatingPointLiteral</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#CharacterLiteral">CharacterLiteral</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#StringLiteral">StringLiteral</a></i>
+<font color="purple">|</font> <font color="blue">"true"</font> <font color="purple">|</font> <font color="blue">"false"</font>
+<font color="purple">|</font> <font color="blue">"null"</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Creator">Creator</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#BasicType">BasicType</a></i> </i></font><i><a class="grammar" href="#ArrayCreatorRest">ArrayCreatorRest</a></i>
+<font color="purple">|</font> <i><a class="grammar" href="#Qualident">Qualident</a></i> <font color="red"><i>(</i></font><i><a class="grammar" href="#ArrayCreatorRest">ArrayCreatorRest</a></i> <font color="purple"><i>|</i></font> <i><a class="grammar" href="#ClassCreatorRest">ClassCreatorRest</a></i><font color="red"><i>)</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ArrayCreatorRest">ArrayCreatorRest</a></i>
+<font color="purple">=</font> <font color="blue">'['</font>
+  <font color="red"><i>(</i></font> <font color="blue">']'</font> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <i><a class="grammar" href="#ArrayInitializer">ArrayInitializer</a></i>
+  <font color="purple">|</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">']'</font>
+    <font color="red"><i>{</i></font> <font color="red"><strong>IF(</strong>nonEmptyBracket()<strong>)</strong></font> <font color="blue">'['</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">']'</font><font color="red"><i>}</i></font>
+    <font color="red"><i>{</i></font> <font color="red"><strong>IF(</strong>emptyBracket()<strong>)</strong></font> <font color="blue">'['</font><font color="blue">']'</font><font color="red"><i>}</i></font>
+  <font color="red"><i>)</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ClassCreatorRest">ClassCreatorRest</a></i>
+<font color="purple">=</font> <i><a class="grammar" href="#Arguments">Arguments</a></i> <font color="red"><i>[</i></font><i><a class="grammar" href="#ClassBody">ClassBody</a></i><font color="red"><i>]</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="IdentifierSuffix">IdentifierSuffix</a></i>
+<font color="purple">=</font> <font color="blue">'['</font> <font color="blue">']'</font> <i><a class="grammar" href="#BracketsOpt">BracketsOpt</a></i> <font color="blue">'.'</font> <font color="blue">"class"</font>
+<font color="purple">|</font> <i><a class="grammar" href="#Arguments">Arguments</a></i>
+<font color="purple">|</font> <font color="blue">'.'</font> <font color="red"><i>(</i></font><font color="blue">"class"</font> <font color="purple"><i>|</i></font> <font color="blue">"this"</font> <font color="purple"><i>|</i></font> <font color="blue">"super"</font> <font color="blue">'.'</font> <i>ident</i> <i><a class="grammar" href="#ArgumentsOpt">ArgumentsOpt</a></i><font color="red"><i>)</i></font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Selector">Selector</a></i>
+<font color="purple">=</font> <font color="blue">'.'</font> <font color="red"><i>(</i></font> <i>ident</i> <i><a class="grammar" href="#ArgumentsOpt">ArgumentsOpt</a></i>
+      <font color="purple">|</font> <font color="blue">"super"</font> <i><a class="grammar" href="#Arguments">Arguments</a></i>
+      <font color="purple">|</font> <font color="blue">"new"</font> <i><a class="grammar" href="#InnerCreator">InnerCreator</a></i>
+      <font color="red"><i>)</i></font>
+<font color="purple">|</font> <font color="blue">'['</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">']'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="InnerCreator">InnerCreator</a>
+</i><font color="purple">=</font> <i>ident</i> <i><a class="grammar" href="#ClassCreatorRest">ClassCreatorRest</a></i>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="ParExpression">ParExpression</a></i>
+<font color="purple">=</font> <font color="blue">'('</font> <i><a class="grammar" href="#Expression">Expression</a></i> <font color="blue">')'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="AssignmentOperator">AssignmentOperator</a></i>
+<font color="purple">=</font> <font color="blue">'='</font>
+<font color="purple">|</font> <font color="blue">"+="</font>
+<font color="purple">|</font> <font color="blue">"-="</font>
+<font color="purple">|</font> <font color="blue">"*="</font>
+<font color="purple">|</font> <font color="blue">"/="</font>
+<font color="purple">|</font> <font color="blue">"&amp;="</font>
+<font color="purple">|</font> <font color="blue">"|="</font>
+<font color="purple">|</font> <font color="blue">"^="</font>
+<font color="purple">|</font> <font color="blue">"%="</font>
+<font color="purple">|</font> <font color="blue">"&lt;&lt;="</font>
+<font color="purple">|</font> <font color="blue">"&gt;&gt;="</font>
+<font color="purple">|</font> <font color="blue">"&gt;&gt;&gt;="</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="Infixop">Infixop</a></i>
+<font color="purple">=</font> <font color="blue">"||"</font>
+<font color="purple">|</font> <font color="blue">"&amp;&amp;"</font>
+<font color="purple">|</font> <font color="blue">'|'</font>
+<font color="purple">|</font> <font color="blue">'^'</font>
+<font color="purple">|</font> <font color="blue">'&amp;'</font>
+<font color="purple">|</font> <font color="blue">"=="</font>
+<font color="purple">|</font> <font color="blue">"!="</font>
+<font color="purple">|</font> <font color="blue">'&lt;"</font>
+<font color="purple">|</font> <font color="blue">'&gt;"</font>
+<font color="purple">|</font> <font color="blue">"&lt;="</font>
+<font color="purple">|</font> <font color="blue">"&gt;="</font>
+<font color="purple">|</font> <font color="blue">"&lt;&lt;"</font>
+<font color="purple">|</font> <font color="blue">"&gt;&gt;"</font>
+<font color="purple">|</font> <font color="blue">"&gt;&gt;&gt;"</font>
+<font color="purple">|</font> <font color="blue">'+'</font>
+<font color="purple">|</font> <font color="blue">'-'</font>
+<font color="purple">|</font> <font color="blue">'*'</font>
+<font color="purple">|</font> <font color="blue">'/'</font>
+<font color="purple">|</font> <font color="blue">'%'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="PrefixOp">PrefixOp</a></i>
+<font color="purple">=</font> <font color="blue">"++"</font>
+<font color="purple">|</font> <font color="blue">"--"</font>
+<font color="purple">|</font> <font color="blue">'!'</font>
+<font color="purple">|</font> <font color="blue">'~'</font>
+<font color="purple">|</font> <font color="blue">'+'</font>
+<font color="purple">|</font> <font color="blue">'-'</font>
+<font color="purple">.</font>
+
+<i><a class="grammar" name="PostfixOp">PostfixOp</a></i>
+<font color="purple">=</font> <font color="blue">"++"</font>
+<font color="purple">|</font> <font color="blue">"--"</font>
+<font color="purple">.</font>
+
+</pre>
+
+<pre><a class="grammar" name="Index"><h3>Index</h3></a>
+
+  <a class="grammar" href="#Arguments">Arguments</a> (<a class="grammar" href="#ArgumentsOpt">ArgumentsOpt</a>, <a class="grammar" href="#ClassCreatorRest">ClassCreatorRest</a>, <a class="grammar" href="#IdentifierSuffix">IdentifierSuffix</a>, <a class="grammar" href="#Selector">Selector</a>, <a class="grammar" href="#SuperSuffix">SuperSuffix</a>)
+  <a class="grammar" href="#ArgumentsOpt">ArgumentsOpt</a> (<a class="grammar" href="#IdentifierSuffix">IdentifierSuffix</a>, <a class="grammar" href="#Primary">Primary</a>, <a class="grammar" href="#Selector">Selector</a>, <a class="grammar" href="#SuperSuffix">SuperSuffix</a>)
+  <a class="grammar" href="#ArrayCreatorRest">ArrayCreatorRest</a> (<a class="grammar" href="#Creator">Creator</a>)
+  <a class="grammar" href="#ArrayInitializer">ArrayInitializer</a> (<a class="grammar" href="#ArrayCreatorRest">ArrayCreatorRest</a>, <a class="grammar" href="#VariableInitializer">VariableInitializer</a>)
+  <a class="grammar" href="#AssignmentOperator">AssignmentOperator</a> (<a class="grammar" href="#Expression">Expression</a>)
+
+  <a class="grammar" href="#BasicType">BasicType</a> (<a class="grammar" href="#Creator">Creator</a>, <a class="grammar" href="#Primary">Primary</a>, <a class="grammar" href="#Type">Type</a>)
+  <a class="grammar" href="#Block">Block</a> (<a class="grammar" href="#CatchClause">CatchClause</a>, <a class="grammar" href="#ClassBodyDeclaration">ClassBodyDeclaration</a>, <a class="grammar" href="#ConstructorDeclaratorRest">ConstructorDeclaratorRest</a>, <a class="grammar" href="#MethodDeclaratorRest">MethodDeclaratorRest</a>, <a class="grammar" href="#VoidMethodDeclaratorRest">VoidMethodDeclaratorRest</a>, <a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#BlockStatement">BlockStatement</a> (<a class="grammar" href="#Block">Block</a>, <a class="grammar" href="#SwitchBlockStatementGroup">SwitchBlockStatementGroup</a>)
+  <a class="grammar" href="#BracketsOpt">BracketsOpt</a> (<a class="grammar" href="#ArrayCreatorRest">ArrayCreatorRest</a>, <a class="grammar" href="#ConstantDeclaratorRest">ConstantDeclaratorRest</a>, <a class="grammar" href="#IdentifierSuffix">IdentifierSuffix</a>, <a class="grammar" href="#InterfaceMethodDeclaratorRest">InterfaceMethodDeclaratorRest</a>, <a class="grammar" href="#MethodDeclaratorRest">MethodDeclaratorRest</a>, <a class="grammar" href="#Primary">Primary</a>, <a class="grammar" href="#Type">Type</a>, <a class="grammar" href="#VariableDeclaratorId">VariableDeclaratorId</a>, <a class="grammar" href="#VariableDeclaratorRest">VariableDeclaratorRest</a>)
+
+  <a class="grammar" href="#CatchClause">CatchClause</a> (<a class="grammar" href="#Catches">Catches</a>)
+  <a class="grammar" href="#Catches">Catches</a> (<a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#ClassBody">ClassBody</a> (<a class="grammar" href="#ClassCreatorRest">ClassCreatorRest</a>, <a class="grammar" href="#ClassDeclaration">ClassDeclaration</a>)
+  <a class="grammar" href="#ClassBodyDeclaration">ClassBodyDeclaration</a> (<a class="grammar" href="#ClassBody">ClassBody</a>)
+  <a class="grammar" href="#ClassCreatorRest">ClassCreatorRest</a> (<a class="grammar" href="#Creator">Creator</a>, <a class="grammar" href="#InnerCreator">InnerCreator</a>)
+  <a class="grammar" href="#ClassDeclaration">ClassDeclaration</a> (<a class="grammar" href="#ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a>, <a class="grammar" href="#InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a>, <a class="grammar" href="#MemberDecl">MemberDecl</a>)
+  <a class="grammar" href="#ClassModifier">ClassModifier</a> (<a class="grammar" href="#ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a>)
+  <a class="grammar" href="#ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a> (<a class="grammar" href="#BlockStatement">BlockStatement</a>, <a class="grammar" href="#TypeDeclaration">TypeDeclaration</a>)
+  <a class="grammar" href="#CompilationUnit">CompilationUnit</a>
+  <a class="grammar" href="#ConditionalExpr">ConditionalExpr</a> (<a class="grammar" href="#Expression1">Expression1</a>)
+  <a class="grammar" href="#ConstantDeclarator">ConstantDeclarator</a> (<a class="grammar" href="#ConstantDeclaratorsRest">ConstantDeclaratorsRest</a>)
+  <a class="grammar" href="#ConstantDeclaratorRest">ConstantDeclaratorRest</a> (<a class="grammar" href="#ConstantDeclarator">ConstantDeclarator</a>, <a class="grammar" href="#ConstantDeclaratorsRest">ConstantDeclaratorsRest</a>)
+  <a class="grammar" href="#ConstantDeclaratorsRest">ConstantDeclaratorsRest</a> (<a class="grammar" href="#InterfaceMethodOrFieldRest">InterfaceMethodOrFieldRest</a>)
+  <a class="grammar" href="#ConstructorDeclaratorRest">ConstructorDeclaratorRest</a> (<a class="grammar" href="#MemberDecl">MemberDecl</a>)
+  <a class="grammar" href="#Creator">Creator</a> (<a class="grammar" href="#Primary">Primary</a>)
+
+  <a class="grammar" href="#Expression">Expression</a> (<a class="grammar" href="#Arguments">Arguments</a>, <a class="grammar" href="#ArrayCreatorRest">ArrayCreatorRest</a>, <a class="grammar" href="#ConditionalExpr">ConditionalExpr</a>, <a class="grammar" href="#SwitchLabel">SwitchLabel</a>, <a class="grammar" href="#ParExpression">ParExpression</a>, <a class="grammar" href="#Primary">Primary</a>, <a class="grammar" href="#Selector">Selector</a>, <a class="grammar" href="#Statement">Statement</a>, <a class="grammar" href="#StatementExpression">StatementExpression</a>, <a class="grammar" href="#VariableInitializer">VariableInitializer</a>)
+  <a class="grammar" href="#Expression1">Expression1</a> (<a class="grammar" href="#ConditionalExpr">ConditionalExpr</a>, <a class="grammar" href="#Expression">Expression</a>)
+  <a class="grammar" href="#Expression2">Expression2</a> (<a class="grammar" href="#Expression1">Expression1</a>)
+  <a class="grammar" href="#Expression2Rest">Expression2Rest</a> (<a class="grammar" href="#Expression2">Expression2</a>)
+  <a class="grammar" href="#Expression3">Expression3</a> (<a class="grammar" href="#Expression2">Expression2</a>, <a class="grammar" href="#Expression2Rest">Expression2Rest</a>)
+
+  <a class="grammar" href="#ForInit">ForInit</a> (<a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#FormalParameter">FormalParameter</a> (<a class="grammar" href="#CatchClause">CatchClause</a>, <a class="grammar" href="#FormalParameters">FormalParameters</a>)
+  <a class="grammar" href="#FormalParameters">FormalParameters</a> (<a class="grammar" href="#ConstructorDeclaratorRest">ConstructorDeclaratorRest</a>, <a class="grammar" href="#InterfaceMethodDeclaratorRest">InterfaceMethodDeclaratorRest</a>, <a class="grammar" href="#MethodDeclaratorRest">MethodDeclaratorRest</a>, <a class="grammar" href="#VoidInterfaceMethodDeclaratorRest">VoidInterfaceMethodDeclaratorRest</a>, <a class="grammar" href="#VoidMethodDeclaratorRest">VoidMethodDeclaratorRest</a>)
+  <a class="grammar" href="#ForUpdate">ForUpdate</a> (<a class="grammar" href="#Statement">Statement</a>)
+
+  <a class="grammar" href="#IdentifierSuffix">IdentifierSuffix</a> (<a class="grammar" href="#Primary">Primary</a>)
+  <a class="grammar" href="#ImportDeclaration">ImportDeclaration</a> (<a class="grammar" href="#CompilationUnit">CompilationUnit</a>)
+  <a class="grammar" href="#Infixop">Infixop</a> (<a class="grammar" href="#Expression2Rest">Expression2Rest</a>)
+  <a class="grammar" href="#InnerCreator">InnerCreator</a> (<a class="grammar" href="#Selector">Selector</a>)
+  <a class="grammar" href="#InterfaceBody">InterfaceBody</a> (<a class="grammar" href="#InterfaceDeclaration">InterfaceDeclaration</a>)
+  <a class="grammar" href="#InterfaceBodyDeclaration">InterfaceBodyDeclaration</a> (<a class="grammar" href="#InterfaceBody">InterfaceBody</a>)
+  <a class="grammar" href="#InterfaceDeclaration">InterfaceDeclaration</a> (<a class="grammar" href="#ClassOrInterfaceDeclaration">ClassOrInterfaceDeclaration</a>, <a class="grammar" href="#InterfaceMemberDecl">InterfaceMemberDecl</a>, <a class="grammar" href="#MemberDecl">MemberDecl</a>)
+  <a class="grammar" href="#InterfaceMemberDecl">InterfaceMemberDecl</a> (<a class="grammar" href="#InterfaceBodyDeclaration">InterfaceBodyDeclaration</a>)
+  <a class="grammar" href="#InterfaceMethodDeclaratorRest">InterfaceMethodDeclaratorRest</a> (<a class="grammar" href="#InterfaceMethodOrFieldRest">InterfaceMethodOrFieldRest</a>)
+  <a class="grammar" href="#InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a> (<a class="grammar" href="#InterfaceMemberDecl">InterfaceMemberDecl</a>)
+  <a class="grammar" href="#InterfaceMethodOrFieldRest">InterfaceMethodOrFieldRest</a> (<a class="grammar" href="#InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a>)
+
+  <a class="grammar" href="#Literal">Literal</a> (<a class="grammar" href="#Primary">Primary</a>)
+  <a class="grammar" href="#LocalVariableDeclaration">LocalVariableDeclaration</a> (<a class="grammar" href="#BlockStatement">BlockStatement</a>, <a class="grammar" href="#ForInit">ForInit</a>)
+
+  <a class="grammar" href="#MemberDecl">MemberDecl</a> (<a class="grammar" href="#ClassBodyDeclaration">ClassBodyDeclaration</a>)
+  <a class="grammar" href="#MethodDeclaratorRest">MethodDeclaratorRest</a> (<a class="grammar" href="#MethodOrFieldRest">MethodOrFieldRest</a>)
+  <a class="grammar" href="#MethodOrFieldDecl">MethodOrFieldDecl</a> (<a class="grammar" href="#MemberDecl">MemberDecl</a>)
+  <a class="grammar" href="#MethodOrFieldRest">MethodOrFieldRest</a> (<a class="grammar" href="#MethodOrFieldDecl">MethodOrFieldDecl</a>)
+  <a class="grammar" href="#Modifier">Modifier</a> (<a class="grammar" href="#ClassBodyDeclaration">ClassBodyDeclaration</a>, <a class="grammar" href="#InterfaceBodyDeclaration">InterfaceBodyDeclaration</a>)
+  <a class="grammar" href="#Modifier1">Modifier1</a> (<a class="grammar" href="#ClassBodyDeclaration">ClassBodyDeclaration</a>, <a class="grammar" href="#Modifier">Modifier</a>)
+  <a class="grammar" href="#MoreStatementExpressions">MoreStatementExpressions</a> (<a class="grammar" href="#ForInit">ForInit</a>, <a class="grammar" href="#ForUpdate">ForUpdate</a>)
+
+  <a class="grammar" href="#ParExpression">ParExpression</a> (<a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#PrefixOp">PrefixOp</a> (<a class="grammar" href="#Expression3">Expression3</a>)
+  <a class="grammar" href="#Primary">Primary</a> (<a class="grammar" href="#Expression3">Expression3</a>)
+  <a class="grammar" href="#PostfixOp">PostfixOp</a> (<a class="grammar" href="#Expression3">Expression3</a>)
+
+  <a class="grammar" href="#Qualident">Qualident</a> (<a class="grammar" href="#CompilationUnit">CompilationUnit</a>, <a class="grammar" href="#Creator">Creator</a>, <a class="grammar" href="#QualidentList">QualidentList</a>, <a class="grammar" href="#Type">Type</a>)
+  <a class="grammar" href="#QualidentList">QualidentList</a> (<a class="grammar" href="#ConstructorDeclaratorRest">ConstructorDeclaratorRest</a>, <a class="grammar" href="#InterfaceMethodDeclaratorRest">InterfaceMethodDeclaratorRest</a>, <a class="grammar" href="#MethodDeclaratorRest">MethodDeclaratorRest</a>, <a class="grammar" href="#VoidInterfaceMethodDeclaratorRest">VoidInterfaceMethodDeclaratorRest</a>, <a class="grammar" href="#VoidMethodDeclaratorRest">VoidMethodDeclaratorRest</a>)
+  <a class="grammar" href="#QualifiedImport">QualifiedImport</a> (<a class="grammar" href="#ImportDeclaration">ImportDeclaration</a>, <a class="grammar" href="#QualifiedImport">QualifiedImport</a>)
+
+  <a class="grammar" href="#Selector">Selector</a> (<a class="grammar" href="#Expression3">Expression3</a>)
+  <a class="grammar" href="#Statement">Statement</a> (<a class="grammar" href="#BlockStatement">BlockStatement</a>, <a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#StatementExpression">StatementExpression</a> (<a class="grammar" href="#ForInit">ForInit</a>, <a class="grammar" href="#ForUpdate">ForUpdate</a>, <a class="grammar" href="#MoreStatementExpressions">MoreStatementExpressions</a>, <a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#SwitchBlockStatementGroup">SwitchBlockStatementGroup</a> (<a class="grammar" href="#SwitchBlockStatementGroups">SwitchBlockStatementGroups</a>)
+  <a class="grammar" href="#SwitchBlockStatementGroups">SwitchBlockStatementGroups</a> (<a class="grammar" href="#Statement">Statement</a>)
+  <a class="grammar" href="#SwitchLabel">SwitchLabel</a> (<a class="grammar" href="#SwitchBlockStatementGroup">SwitchBlockStatementGroup</a>)
+  <a class="grammar" href="#SuperSuffix">SuperSuffix</a> (<a class="grammar" href="#Primary">Primary</a>)
+
+  <a class="grammar" href="#Type">Type</a> (<a class="grammar" href="#ClassDeclaration">ClassDeclaration</a>, <a class="grammar" href="#Expression2Rest">Expression2Rest</a>, <a class="grammar" href="#Expression3">Expression3</a>, <a class="grammar" href="#FormalParameter">FormalParameter</a>, <a class="grammar" href="#InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a>, <a class="grammar" href="#LocalVariableDeclaration">LocalVariableDeclaration</a>, <a class="grammar" href="#MethodOrFieldDecl">MethodOrFieldDecl</a>, <a class="grammar" href="#TypeList">TypeList</a>)
+  <a class="grammar" href="#TypeDeclaration">TypeDeclaration</a> (<a class="grammar" href="#CompilationUnit">CompilationUnit</a>)
+  <a class="grammar" href="#TypeList">TypeList</a> (<a class="grammar" href="#ClassDeclaration">ClassDeclaration</a>, <a class="grammar" href="#InterfaceDeclaration">InterfaceDeclaration</a>)
+
+  <a class="grammar" href="#VariableDeclarator">VariableDeclarator</a> (<a class="grammar" href="#VariableDeclarators">VariableDeclarators</a>, <a class="grammar" href="#VariableDeclaratorsRest">VariableDeclaratorsRest</a>)
+  <a class="grammar" href="#VariableDeclaratorId">VariableDeclaratorId</a> (<a class="grammar" href="#FormalParameter">FormalParameter</a>)
+  <a class="grammar" href="#VariableDeclaratorRest">VariableDeclaratorRest</a> (<a class="grammar" href="#VariableDeclarator">VariableDeclarator</a>, <a class="grammar" href="#VariableDeclaratorRest">VariableDeclaratorRest</a>)
+  <a class="grammar" href="#VariableDeclarators">VariableDeclarators</a> (<a class="grammar" href="#LocalVariableDeclaration">LocalVariableDeclaration</a>)
+  <a class="grammar" href="#VariableDeclaratorsRest">VariableDeclaratorsRest</a> (<a class="grammar" href="#MethodOrFieldRest">MethodOrFieldRest</a>)
+  <a class="grammar" href="#VariableInitializer">VariableInitializer</a> (<a class="grammar" href="#ArrayInitializer">ArrayInitializer</a>, <a class="grammar" href="#ConstantDeclaratorRest">ConstantDeclaratorRest</a>, <a class="grammar" href="#VariableDeclaratorRest">VariableDeclaratorRest</a>)
+  <a class="grammar" href="#VoidInterfaceMethodDeclaratorRest">VoidInterfaceMethodDeclaratorRest</a> (<a class="grammar" href="#InterfaceMethodOrFieldDecl">InterfaceMethodOrFieldDecl</a>)
+  <a class="grammar" href="#VoidMethodDeclaratorRest">VoidMethodDeclaratorRest</a> (<a class="grammar" href="#MemberDecl">MemberDecl</a>)
+
+</pre>
+
+<p></p><center><small><b>
+  <a href="#Grammar">Grammar</a>
+  | <a href="#Classes">Classes</a>
+  | <a href="#Interfaces">Interfaces</a>
+  | <a href="#Statements">Statements</a>
+  | <a href="#Expressions">Expressions</a>
+  | <a href="#Index">Index</a>
+</b></small></center>
+<h1></h1>
+
+<p><i><b>
+  Last updated 12.07.2004<br><!-- Date format: MM.DD.YYYY -->
+</b></i></p>
+
+</body></html>

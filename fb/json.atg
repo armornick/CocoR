@@ -1,0 +1,144 @@
+COMPILER JSON
+
+  dim counter as integer
+  
+CHARACTERS
+  letter    = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_".
+  digit     = "0123456789".
+  cr        = '\r'.
+  lf        = '\n'.
+  tab       = '\t'.  
+  stringch  = ANY - '"' - '\\' - cr - lf.
+  charch    = ANY - '\'' - '\\' - cr - lf.
+  printable =  '\u0020' .. '\u007e'.
+  escapech    = "bnfrt/" + '\\' + '"'.  
+  hex       = "0123456789abcdefABCDEF".
+  dot       = '.'.
+
+TOKENS
+  colon     = ':'.
+  comma     =  ','.
+  lbrace    = '{'.
+  rbrace    = '}'.
+  lbracket  = '['.
+  rbracket  = ']'.
+  ident     = letter { letter | digit }.
+  string_   = '"' { stringch | '\\' escapech | '\\' 'u' hex hex hex hex} '"'.
+  badString = '"' { stringch | '\\' escapech } (cr | lf).
+  integer_  = ['-'] digit {digit}.
+  double_   = ['-'] digit {digit} (((dot digit {digit}) [('E' | 'e') [('+' | '-')] digit {digit}]) | (('E' | 'e') [('+' | '-')] digit {digit})).
+  
+
+IGNORE ' ' + '\r' + '\t' + '\n'
+
+/*-------------------------------------------------------------------------*/
+
+PRODUCTIONS
+
+JSON          = (jsonobject | jsonarray).
+jsonobject    = object.
+jsonarray     = array.
+object        = lbrace               (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val)
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))
+                                        end if
+                                    .)
+                [
+                objectelement      
+                {
+                comma                (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                objectelement
+                }
+                ] 
+                rbrace               (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                .
+objectelement = string_              (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                colon                (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                value.
+array         = lbracket             (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                [
+                value 
+                {
+                comma               (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                value
+                }
+                ] 
+                rbracket           (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                        parser->counter +=1
+                                        if (parser->counter mod 5 = 0) then
+                                          wprintf(@wstr(!"\n"))  
+                                        end if
+                                    .)
+                .
+value         =  string_           (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                      parser->counter +=1
+                                      if (parser->counter mod 5 = 0) then
+                                        wprintf(@wstr(!"\n"))  
+                                      end if
+                                    .)
+               | integer_          (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                      parser->counter +=1
+                                      if (parser->counter mod 5 = 0) then
+                                        wprintf(@wstr(!"\n"))  
+                                      end if
+                                    .)
+               | double_           (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                      parser->counter +=1
+                                      if (parser->counter mod 5 = 0) then
+                                        wprintf(@wstr(!"\n"))  
+                                      end if
+                                    .)
+               | object   
+               | array
+               | "true"           (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                     parser->counter +=1
+                                     if (parser->counter mod 5 = 0) then
+                                       wprintf(@wstr(!"\n"))  
+                                     end if
+                                    .)
+               | "false"          (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                     parser->counter +=1
+                                     if (parser->counter mod 5 = 0) then
+                                       wprintf(@wstr(!"\n"))  
+                                     end if
+                                    .)
+               | "null"           (. wprintf(@wstr(!"token(%d,%ls)  "),parser->t->kind,parser->t->val) 
+                                     parser->counter +=1
+                                     if (parser->counter mod 5 = 0) then
+                                       wprintf(@wstr(!"\n"))  
+                                     end if
+                                    .)
+               .
+               
+END JSON.

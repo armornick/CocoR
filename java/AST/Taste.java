@@ -1,0 +1,1 @@
+package Taste;class Taste {	public static void main (String[] arg) {		if (arg.length > 0) {			Scanner scanner = new Scanner(arg[0]);			Parser parser = new Parser(scanner);			parser.Parse();			System.out.println(parser.errors.count + " errors detected");		} else			System.out.println("-- No source file specified");	}}

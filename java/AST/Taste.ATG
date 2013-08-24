@@ -1,0 +1,147 @@
+COMPILER Taste
+
+Proc curProc;  // current program unit (procedure or main program)
+
+CHARACTERS
+  letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".
+  digit = "0123456789".
+  cr  = '\r'.
+  lf  = '\n'.
+  tab = '\t'.
+
+TOKENS
+  ident  = letter {letter | digit}.
+  number = digit {digit}.
+
+COMMENTS FROM "/*" TO "*/" NESTED
+COMMENTS FROM "//" TO lf
+
+IGNORE cr + lf + tab
+
+
+
+PRODUCTIONS
+
+/*=================== Program and declarations ============================*/
+
+Taste                    (. String name; .)
+= "program"
+  Ident<out name>        (. curProc = new Proc(name, null, this); .)
+  "{"
+  { VarDecl | ProcDecl }
+  "}"                    (. for (Obj obj: curProc.locals) {
+                            	if (obj instanceof Proc) ((Proc)obj).dump();
+                            } .).
+/*------------------------------------------------------------------------*/
+VarDecl                  (. String name; Type type; .)
+= Typ<out type>
+  Ident<out name>        (. curProc.add(new Var(name, type)); .)
+  { ',' Ident<out name>  (. curProc.add(new Var(name, type)); .)
+  } ';'.
+/*------------------------------------------------------------------------*/
+Typ<out Type type>
+=                        (. type = Type.INT; .)
+ ( "int"
+ | "bool"                (. type = Type.BOOL; .)
+ ).
+/*------------------------------------------------------------------------*/
+ProcDecl                 (. String name; .)
+= "void"
+  Ident<out name>        (. Proc oldProc = curProc;
+                            curProc = new Proc(name, oldProc, this);
+                            oldProc.add(curProc); .)
+  '(' ')'
+  Block<out curProc.block> (. curProc = oldProc; .).
+  
+  
+/*============================= Statements ===============================*/
+
+Block<out Block b>       (. Stat s; .)
+= '{'                    (. b = new Block(); .)
+  { Stat<out s>          (. b.add(s); .)
+  | VarDecl 
+  }
+  '}'
+  .
+/*------------------------------------------------------------------------*/
+Stat<out Stat s>         (. String name; Expr e; Stat s2; Block b; .)
+=                        (. s = null; .)
+( Ident<out name>        (. Obj obj = curProc.find(name); .)
+  ( '='
+		Expr<out e> ';'      (. s = new Assignment(obj, e); .)
+	| '(' ')' ';'          (. s = new Call(obj); .)
+	)
+
+| "if" 
+	'(' Expr<out e> ')'
+	Stat<out s>            (. s = new If(e, s); .)
+	[ "else" Stat<out s2>  (. s = new IfElse(s, s2); .)
+	]
+
+| "while"
+	'(' Expr<out e> ')'
+	Stat<out s>            (. s = new While(e, s); .)
+
+| "read"
+	Ident<out name> ';'    (. s = new Read(curProc.find(name)); .)
+
+| "write" 
+	Expr<out e> ';'        (. s = new Write(e); .)
+
+| Block<out b>           (. s = b; .)
+).
+
+
+
+/*============================ Expressions ===============================*/
+
+Expr<out Expr e>         (. Operator op; Expr e2; .)
+= SimExpr<out e>
+  [ RelOp<out op>
+    SimExpr<out e2>      (. e = new BinExpr(e, op, e2); .)
+  ].
+/*------------------------------------------------------------------------*/
+SimExpr<out Expr e>      (. Operator op; Expr e2; .)
+= Term<out e>
+  { AddOp<out op>
+    Term<out e2>         (. e = new BinExpr(e, op, e2); .)
+	}.
+/*------------------------------------------------------------------------*/
+Term<out Expr e>         (. Operator op; Expr e2; .)
+= Factor<out e>
+  { MulOp<out op>
+    Factor<out e2>       (. e = new BinExpr(e, op, e2); .)
+	}.
+/*------------------------------------------------------------------------*/
+Factor<out Expr e>       (. String name; .)
+=                        (. e = null; .)
+  ( Ident<out name>      (. e = new Ident(curProc.find(name)); .)
+  | number               (. e = new IntCon(Integer.parseInt(t.val)); .)
+  | '-' Factor<out e>    (. e = new UnaryExpr(Operator.SUB, e); .)
+  | "true"               (. e = new BoolCon(true); .)
+  | "false"              (. e = new BoolCon(false); .)
+  ).
+/*------------------------------------------------------------------------*/
+Ident<out String name>
+= ident                  (. name = t.val; .).
+/*------------------------------------------------------------------------*/
+AddOp<out Operator op>
+=                        (. op = Operator.ADD; .)
+  ( '+'
+  | '-'                  (. op = Operator.SUB; .)
+  ).
+/*------------------------------------------------------------------------*/
+MulOp<out Operator op>
+=                        (. op = Operator.MUL; .)
+  ( '*'
+  | '/'                  (. op = Operator.DIV; .)
+  ).
+/*------------------------------------------------------------------------*/
+RelOp<out Operator op>
+=                        (. op = Operator.EQU; .)
+  ( "=="
+  | '<'                  (. op = Operator.LSS; .)
+  | '>'                  (. op = Operator.GTR; .)
+  ).
+
+END Taste.
